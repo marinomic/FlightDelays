@@ -114,84 +114,83 @@ class Model:
 
 # Fatto da me in cui la ricorsione funziona e considera anche il caso in cui la soluzione ottimale venga raggiunta prima di aver compiuto
 # il massimo di tratte, siccome si tratta di un massimo di tratte e non per forza di un numero di tratte necessario per il percorso richiesto.
-    def getBestItinerary(self, aP, aA, tratteMax):
-        """
-        Alla pressione del bottone“Cerca itinerario”, sviluppare un algoritmo ricorsivo agente sul grafo creato in
-        precedenza per cercare l’itinerario di viaggio tra v0 e v1 che massimizzi il numero totale di voli per ciascuna
-        delle tratte del percorso selezionato(in altre parole, il percorso che massimizzi la somma dei pesi degli archi attraversati),
-        utilizzando al massimo nMax tratte.
-        """
-        self._bestItinerary = []
-        self._bestItineraryWeight = 0
-        parziale = [aP]
-        for v in self._grafo.neighbors(aP):
-            parziale.append(v)
-            self.ricorsiva(parziale, aA, tratteMax)
-            parziale.pop()
-        return self._bestItinerary, self._bestItineraryWeight
-
-    def ricorsiva(self, parziale, target, tratteMax):
-        # caso terminale
-        if len(parziale) == tratteMax + 1 or parziale[-1] == target:
-            peso = self.calcolaPeso(parziale)
-            if peso > self._bestItineraryWeight:
-                self._bestItinerary = copy.deepcopy(parziale)
-                self._bestItineraryWeight = peso
-            return
-        # caso ricorsivo
-        ultimoNodo = parziale[-1]
-        for vicino in self._grafo.neighbors(ultimoNodo):
-            if vicino not in parziale:
-                parziale.append(vicino)
-                self.ricorsiva(parziale, target, tratteMax)
-                parziale.pop()
-
-    def calcolaPeso(self, parziale):
-        peso = 0
-        for i in range(1, len(parziale)):
-            peso += self._grafo[parziale[i - 1]][parziale[i]]['weight']
-        return peso
+#     def getBestItinerary(self, aP, aA, tratteMax):
+#         """
+#         Alla pressione del bottone“Cerca itinerario”, sviluppare un algoritmo ricorsivo agente sul grafo creato in
+#         precedenza per cercare l’itinerario di viaggio tra v0 e v1 che massimizzi il numero totale di voli per ciascuna
+#         delle tratte del percorso selezionato(in altre parole, il percorso che massimizzi la somma dei pesi degli archi attraversati),
+#         utilizzando al massimo nMax tratte.
+#         """
+#         self._bestItinerary = []
+#         self._bestItineraryWeight = 0
+#         parziale = [aP]
+#         for v in self._grafo.neighbors(aP):
+#             parziale.append(v)
+#             self.ricorsiva(parziale, aA, tratteMax)
+#             parziale.pop()
+#         return self._bestItinerary, self._bestItineraryWeight
+#
+#     def ricorsiva(self, parziale, target, tratteMax):
+#         # caso terminale
+#         if len(parziale) == tratteMax + 1 or parziale[-1] == target:
+#             peso = self.calcolaPeso(parziale)
+#             if peso > self._bestItineraryWeight:
+#                 self._bestItinerary = copy.deepcopy(parziale)
+#                 self._bestItineraryWeight = peso
+#             return
+#         # caso ricorsivo
+#         ultimoNodo = parziale[-1]
+#         for vicino in self._grafo.neighbors(ultimoNodo):
+#             if vicino not in parziale:
+#                 parziale.append(vicino)
+#                 self.ricorsiva(parziale, target, tratteMax)
+#                 parziale.pop()
+#
+#     def calcolaPeso(self, parziale):
+#         peso = 0
+#         for i in range(1, len(parziale)):
+#             peso += self._grafo[parziale[i - 1]][parziale[i]]['weight']
+#         return peso
 
 # Fatto dal professore
 
-    # def getBestItinerary(self, aP, aA, tratteMax):
-    #     self._bestItinerary = []
-    #     self._bestItineraryWeight = 0
-    #     parziale = [aP]
-    #     # for v in self._grafo.neighbors(aP):
-    #     #   parziale.append(v)
-    #     self.ricorsiva(parziale, aA, tratteMax)
-    #     #   parziale.pop()
-    #     return self._bestItinerary, self._bestItineraryWeight
-    #
-    # def ricorsiva(self, parziale, target, tratteMax):
-    #     # CASO TERMINALE
-    #     # Verificare che parziale sia una soluzione ammissibile
-    #     if len(parziale) == tratteMax + 1:
-    #         peso = self.calcolaPeso(parziale)
-    #         # Verificare se la soluzione trovata è migliore di quella attuale
-    #         if (peso > self._bestItineraryWeight
-    #                 and parziale[-1] == target):
-    #             self._bestItinerary = copy.deepcopy(parziale)
-    #             self._bestItineraryWeight = peso
-    #         # Esco
-    #         return
-    #
-    #     # CASO RICORSIVO
-    #     # Posso ancora aggiungere nodi
-    #     ultimoNodo = parziale[-1]  # ultimo nodo che ho aggiunto
-    #     # Prendo i vicini dell'ultimo nodo e provo ad aggiungerli
-    #     for vicino in self._grafo.neighbors(ultimoNodo):
-    #         # Tipicamente qua inserisco dei vincoli, per esempio questo:
-    #         if vicino not in parziale:
-    #             # Ma nel nostro caso non è richisto dalla traccia alcun vincolo
-    #             parziale.append(vicino)
-    #             # Ricorsione
-    #             self.ricorsiva(parziale, target, tratteMax)
-    #             parziale.pop()
-    #
-    # def calcolaPeso(self, listOfNodes):
-    #     peso = 0
-    #     for i in range(1, len(listOfNodes)):
-    #         peso += self._grafo[listOfNodes[i - 1]][listOfNodes[i]]['weight']
-    #     return peso
+    def getBestItinerary(self, aP, aA, tratteMax):
+        self._bestItinerary = []
+        self._bestItineraryWeight = 0
+        parziale = [aP]
+        # for v in self._grafo.neighbors(aP):
+        #   parziale.append(v)
+        self.ricorsiva(parziale, aA, tratteMax)
+        #   parziale.pop()
+        return self._bestItinerary, self._bestItineraryWeight
+
+    def ricorsiva(self, parziale, target, tratteMax):
+        # CASO TERMINALE
+        # Verificare che parziale sia una soluzione ammissibile
+        if len(parziale) == tratteMax + 1:
+            return
+        # Verificare se la soluzione trovata è migliore di quella attuale
+        peso = self.calcolaPeso(parziale)
+        if (peso > self._bestItineraryWeight
+                and parziale[-1] == target):
+            self._bestItinerary = copy.deepcopy(parziale)
+            self._bestItineraryWeight = peso
+
+        # CASO RICORSIVO
+        # Posso ancora aggiungere nodi
+        ultimoNodo = parziale[-1]  # ultimo nodo che ho aggiunto
+        # Prendo i vicini dell'ultimo nodo e provo ad aggiungerli
+        for vicino in self._grafo.neighbors(ultimoNodo):
+            # Tipicamente qua inserisco dei vincoli, per esempio questo:
+            if vicino not in parziale:
+                # Ma nel nostro caso non è richisto dalla traccia alcun vincolo
+                parziale.append(vicino)
+                # Ricorsione
+                self.ricorsiva(parziale, target, tratteMax)
+                parziale.pop()
+
+    def calcolaPeso(self, listOfNodes):
+        peso = 0
+        for i in range(1, len(listOfNodes)):
+            peso += self._grafo[listOfNodes[i - 1]][listOfNodes[i]]['weight']
+        return peso
