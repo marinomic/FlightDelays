@@ -18,6 +18,7 @@ class View(ft.UserControl):
         self._btn_CercaItinerario = None
         self._numeroTratteMax = None
         self._ddAeroportoA = None
+        self._btnTstConnessione = None
         self._btn_AeroportiConnessi = None
         self._ddAeroportoP = None
         self._btn_AnalizzaAreoporti = None
@@ -47,7 +48,7 @@ class View(ft.UserControl):
         # ROW 1
         self._ddAeroportoP = ft.Dropdown(
                 label="Aeroporto di partenza",
-                width=250,
+                width=450,
                 disabled=True,
         )
         self._btn_AeroportiConnessi = ft.ElevatedButton(
@@ -63,10 +64,15 @@ class View(ft.UserControl):
         # ROW 2
         self._ddAeroportoA = ft.Dropdown(
                 label="Aeroporto di destinazione",
-                width=250,
+                width=450,
                 disabled=True,
         )
-        row2 = ft.Row([self._ddAeroportoA, ft.Container(width=300)], alignment=ft.MainAxisAlignment.CENTER)
+
+        self._btnTstConnessione = ft.ElevatedButton(text="Test Connessione",
+                                                    on_click=self._controller.handle_test_connessione,
+                                                    width=300,
+                                                    height=50)
+        row2 = ft.Row([self._ddAeroportoA, self._btnTstConnessione], alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row2)
 
         # ROW 3

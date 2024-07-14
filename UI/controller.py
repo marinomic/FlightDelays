@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import flet as ft
 
 
@@ -75,19 +77,53 @@ class Controller:
             self._view._txt_result.controls.append(ft.Text(f"{v[1]} - {v[0]}"))
         self._view.update_page()
 
+    # Questo era richiesto nell'esercizio, non al punto 1 del tema d'esame
+    def handle_test_connessione(self, event):
+        v0 = self._choiceAeroportoP
+        v1 = self._choiceAeroportoA
+        if v0 is None or v1 is None:
+            self._view._txt_result.controls.clear()
+            self._view._txt_result.controls.append(ft.Text("Selezionare un aeroporto di partenza e uno di arrivo"))
+            self._view.update_page()
+            return
+        # Verificare se esiste un percorso tra i due aeroporti
+
+        if not self._model.esistePercorso(v0, v1):
+            self._view._txt_result.controls.clear()
+            self._view._txt_result.controls.append(ft.Text(f"Non esiste un percorso tra {v0} e {v1}"))
+            self._view.update_page()
+        else:
+            self._view._txt_result.controls.clear()
+            self._view._txt_result.controls.append(ft.Text(f"Esiste un percorso tra {v0} e {v1}"))
+            self._view.update_page()
+
+        # Trovare un possibile percorso tra i due aeroporti
+        path = self._model.trovaCamminoBFS(v0, v1)
+        self._view._txt_result.controls.append(
+                ft.Text(f"Il cammino con minor numero di archi (BFS) tra {v0} e {v1} è:")
+        )
+        for p in path:
+            self._view._txt_result.controls.append(ft.Text(f"{p}"))
+        self._view.update_page()
+
     def handle_cerca_itinerario(self, event):
+        v0 = self._choiceAeroportoP
+        v1 = self._choiceAeroportoA
         nMaxTratte = self._view._numeroTratteMax.value
         try:
             nMax = int(nMaxTratte)
         except ValueError:
             self._view._txt_result.controls.clear()
-            self._view._txt_result.controls.append(ft.Text("Inserire un numero intero nel campo 'Numero tratte massimo'"))
+            self._view._txt_result.controls.append(
+                ft.Text("Inserire un numero intero nel campo 'Numero tratte massimo'"))
             self._view.update_page()
             return
-        path, totCost = self._model.getBestItinerary(self._choiceAeroportoP, self._choiceAeroportoA, nMax)
+        tic = datetime.now()
+        path, totCost = self._model.getBestItinerary(v0, v1, nMax)
+        toc = datetime.now()
         self._view._txt_result.controls.clear()
-        self._view._txt_result.controls.append(ft.Text(f"Tratte compiute con {totCost} voli:"))
+        self._view._txt_result.controls.append(ft.Text(f"Il percorso ottimo tra {v0} e {v1} compiute con {totCost} voli è:"))
         for p in path:
             self._view._txt_result.controls.append(ft.Text(f"{p}"))
+        self._view._txt_result.controls.append(ft.Text(f"Tempo impiegato per la ricerca: {toc - tic}"))
         self._view.update_page()
-
